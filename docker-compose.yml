@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  openvpn:
+    image: lawtancool/docker-openvpn-xor
+    restart: unless-stopped
+    volumes:
+      - "./resolv.conf:/etc/netns/route/resolv.conf"
+      - "./vpn:/etc/openvpn:ro"
+      - "./scripts:/opt/scripts:ro"
+    pid: "service:route"
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+    devices:
+      - "/dev/net/tun"
+    command: ["/opt/scripts/ovpn-run.sh"]
+  route:
+    image: busybox
+    restart: unless-stopped
+    volumes:
+      - "./resolv.conf:/etc/resolv.conf"
+    network_mode: none
+    sysctls:
+      - "net.ipv4.ping_group_range=0 2147483647"
+    command: ["sleep", "inf"]
