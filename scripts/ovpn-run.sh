@@ -17,7 +17,6 @@ exec openvpn \
   --up "/opt/scripts/ovpn-script.sh" \
   --route-up "/opt/scripts/ovpn-script.sh" \
   --down "/opt/scripts/ovpn-script.sh" \
-  --up-restart \
   --cd /etc/openvpn \
   --config ovpn.conf \
   "${@}"

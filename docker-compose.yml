@@ -14,7 +14,7 @@ services:
       - NET_ADMIN
     devices:
       - "/dev/net/tun"
-    command: ["/opt/scripts/ovpn-run.sh"]
+    command: ["/opt/scripts/ovpn-run.sh", "--up-restart"]
   route:
     image: busybox
     restart: unless-stopped
