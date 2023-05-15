@@ -16,12 +16,23 @@ services:
       - "/dev/net/tun"
     command: ["/opt/scripts/ovpn-run.sh", "--up-restart"]
   route:
-    image: busybox
+    image: wpengine/iptables@sha256:83833e038941488b8e7b02d961d42966093f9de1c336d84e541c0fb6589eaf7c
     restart: unless-stopped
     stop_signal: SIGKILL
     volumes:
       - "./resolv.conf:/etc/resolv.conf"
-    network_mode: none
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - bridge
     sysctls:
       - "net.ipv4.ping_group_range=0 2147483647"
-    command: ["sleep", "inf"]
+      - "net.ipv4.ip_forward=1"
+    command: ["sh", "-c", "iptables -t nat -A POSTROUTING -j MASQUERADE &&
+                           iptables -A FORWARD -j ACCEPT &&
+                           ip route delete default && exec tail -f /dev/null"]
+networks:
+  bridge:
+    internal: false
+    driver_opts:
+      com.docker.network.bridge.enable_ip_masquerade: "false"
