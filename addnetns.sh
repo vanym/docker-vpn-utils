@@ -11,3 +11,4 @@ mkdir -p /var/run/netns
 ln -sf "$NSPATH" /var/run/netns/"$NSNAME"
 mkdir -p /etc/netns/"$NSNAME"
 ln -sf $(readlink -f "$DIRSH"/resolv.conf) /etc/netns/"$NSNAME"/resolv.conf
+echo "$NSNAME"
