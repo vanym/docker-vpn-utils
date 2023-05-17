@@ -33,8 +33,8 @@ CGROUP_ROOT="$1"
 CGROUP_NAME="$2"
 DECID="$3"
 
-while inotifywait -e MODIFY "$CGROUP_ROOT"/"$CGROUP_NAME"/cgroup.events && \
-      grep "populated 1" "$CGROUP_ROOT"/"$CGROUP_NAME"/cgroup.events
+while grep "populated 1" "$CGROUP_ROOT"/"$CGROUP_NAME"/cgroup.events && \
+      inotifywait -e MODIFY "$CGROUP_ROOT"/"$CGROUP_NAME"/cgroup.events
 do true ; done
 
 iptables -t mangle -D OUTPUT -m cgroup --path "$CGROUP_NAME" -j MARK --set-mark "$DECID"
