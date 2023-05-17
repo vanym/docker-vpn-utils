@@ -18,7 +18,7 @@ CGROUP_NAME="$CGROUP_PARENT"/route."$NAME"
 HEXID='4'$(echo -n "$CGROUP_NAME" | md5sum | cut -f1 -d' ' | cut -c1-6)
 DECID=$((16#$HEXID))
 
-if mkdir "$CGROUP_ROOT"/"$CGROUP_NAME"; then
+if mkdir "$CGROUP_ROOT"/"$CGROUP_NAME" 2> >(:); then
   iptables -t mangle -A OUTPUT -m cgroup --path "$CGROUP_NAME" -j MARK --set-mark "$DECID"
   iptables -t nat -A POSTROUTING -m mark --mark "$DECID" -j MASQUERADE
   ip route add default via "$CIP" table "$DECID"
