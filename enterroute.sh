@@ -13,8 +13,13 @@ CGROUP_ROOT="/sys/fs/cgroup"
 CID=$(docker-compose -f "$DIRSH"/docker-compose.yml ps route -q --status running)
 CIP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$CID")
 NAME=$(docker inspect -f '{{ index .Config.Labels "com.docker.compose.project" }}' "$CID")
+BASENAME=route."$NAME"
 
-CGROUP_NAME="$CGROUP_PARENT"/route."$NAME"
+if [ "${CGROUP_PARENT##*/}" != "$BASENAME" ]; then
+  CGROUP_NAME="$CGROUP_PARENT"/"$BASENAME"
+else
+  CGROUP_NAME="$CGROUP_PARENT"
+fi
 HEXID='4'$(echo -n "$CGROUP_NAME" | md5sum | cut -f1 -d' ' | cut -c1-6)
 DECID=$((16#$HEXID))
 
