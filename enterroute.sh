@@ -23,6 +23,7 @@ if mkdir "$CGROUP_ROOT"/"$CGROUP_NAME"; then
   iptables -t nat -A POSTROUTING -m mark --mark "$DECID" -j MASQUERADE
   ip route add default via "$CIP" table "$DECID"
   ip rule add fwmark "$DECID" table "$DECID"
+  ip rule add fwmark "$DECID" suppress_prefixlength 0
   systemd-run -q bash -c '
 #!/bin/bash
 
@@ -39,6 +40,7 @@ do true ; done
 iptables -t mangle -D OUTPUT -m cgroup --path "$CGROUP_NAME" -j MARK --set-mark "$DECID"
 iptables -t nat -D POSTROUTING -m mark --mark "$DECID" -j MASQUERADE
 ip route flush table "$DECID"
+ip rule del fwmark "$DECID" suppress_prefixlength 0
 ip rule del fwmark "$DECID" table "$DECID"
 rmdir "$CGROUP_ROOT"/"$CGROUP_NAME"
 
