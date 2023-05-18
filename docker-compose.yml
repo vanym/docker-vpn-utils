@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   openvpn:
-    image: lawtancool/docker-openvpn-xor
+    image: lawtancool/docker-openvpn-xor@sha256:5c64db86390e61f767dc24b648fd58ec8574d3d9f477b278d4dc8bb3fa6cf90e
     restart: unless-stopped
     volumes:
       - "./resolv.conf:/etc/netns/route/resolv.conf"
