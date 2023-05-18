@@ -14,9 +14,10 @@ exec openvpn \
   --setenv NETNS "$NETNS" \
   --setenv DNS "1" \
   --setenv IPV6 "1" \
-  --up "/opt/scripts/ovpn-script.sh" \
-  --route-up "/opt/scripts/ovpn-script.sh" \
-  --down "/opt/scripts/ovpn-script.sh" \
+  --up "/opt/scripts/ovpn-hook.sh" \
+  --route-up "/opt/scripts/ovpn-hook.sh" \
+  --route-pre-down "/opt/scripts/ovpn-hook.sh" \
+  --down "/opt/scripts/ovpn-hook.sh" \
   --cd /etc/openvpn \
   --config ovpn.conf \
   "${@}"
