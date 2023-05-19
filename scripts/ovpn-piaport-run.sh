@@ -12,14 +12,14 @@ add_network_rules(){
   local LOCALPORT="$3"
   local REMOTEPORT="$4"
   iptables -t nat -N PIAPORT-PREROUTING
-  iptables -t nat -A PREROUTING -i "$DEV" -j PIAPORT-PREROUTING
+  iptables -t nat -I PREROUTING 1 -i "$DEV" -j PIAPORT-PREROUTING
   iptables -t nat -A PIAPORT-PREROUTING -p tcp --dport "$REMOTEPORT" -j DNAT --to "$LOCALHOST":"$LOCALPORT"
   iptables -t nat -A PIAPORT-PREROUTING -p udp --dport "$REMOTEPORT" -j DNAT --to "$LOCALHOST":"$LOCALPORT"
   iptables -t nat -A PIAPORT-PREROUTING -p tcp --dport "$LOCALPORT" -j REDIRECT --to-port "$REMOTEPORT"
   iptables -t nat -A PIAPORT-PREROUTING -p udp --dport "$LOCALPORT" -j REDIRECT --to-port "$REMOTEPORT"
 
   iptables -t nat -N PIAPORT-POSTROUTING
-  iptables -t nat -A POSTROUTING -o "$DEV" -j PIAPORT-POSTROUTING
+  iptables -t nat -I POSTROUTING 1 -o "$DEV" -j PIAPORT-POSTROUTING
   iptables -t nat -A PIAPORT-POSTROUTING -p tcp --sport "$LOCALPORT" -j SNAT --to :"$REMOTEPORT"
   iptables -t nat -A PIAPORT-POSTROUTING -p udp --sport "$LOCALPORT" -j SNAT --to :"$REMOTEPORT"
   iptables -t nat -A PIAPORT-POSTROUTING -p tcp --sport "$REMOTEPORT" -j SNAT --to :"$LOCALPORT"
