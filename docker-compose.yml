@@ -18,6 +18,7 @@ services:
   route:
     image: busybox
     restart: unless-stopped
+    init: true
     stop_signal: SIGKILL
     volumes:
       - "./resolv.conf:/etc/resolv.conf"
