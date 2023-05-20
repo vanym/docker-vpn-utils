@@ -7,6 +7,10 @@ NETNS="route"
 mkdir -p /var/run/netns
 ln -sf /proc/1/ns/net /var/run/netns/"$NETNS"
 
+source /opt/scripts/ovpn-run-rr.sh
+mkdir -p /opt/rr
+rr_rotate /opt/rr/always /etc/openvpn/rr/always.d/
+
 exec openvpn \
   --ifconfig-noexec \
   --route-noexec \
