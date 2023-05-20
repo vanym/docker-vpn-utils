@@ -12,6 +12,8 @@ case $script_type in
     export PF_HOSTNAME="$X509_0_CN"
     export DEV="$dev"
     pushd /opt/scripts > /dev/null
+    [ -f piaport/get_token.sh -a -f piaport/port_forwarding.sh ] || \
+      echo "WARNING: can't find piaport scripts"
     ip netns exec "$NETNS" screen -dmS "$SCREEN_NAME" ./ovpn-piaport-run.sh
     popd > /dev/null
   ;;
