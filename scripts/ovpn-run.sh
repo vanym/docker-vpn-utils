@@ -11,9 +11,14 @@ source /opt/scripts/ovpn-run-rr.sh
 mkdir -p /var/rr
 rr_rotate /var/rr/always /etc/openvpn/rr/always.d/
 rr_init /var/rr/auth-failure /etc/openvpn/rr/auth-failure.d/
+rr_init /var/rr/connection-failure /etc/openvpn/rr/connection-failure.d/
 
 auth_failure(){
   rr_rotate /var/rr/auth-failure /etc/openvpn/rr/auth-failure.d/
+}
+
+connection_failure(){
+  rr_rotate /var/rr/connection-failure /etc/openvpn/rr/connection-failure.d/
 }
 
 exec openvpn \
@@ -31,5 +36,7 @@ exec openvpn \
   --config ovpn.conf \
   --log >(tee > /proc/self/fd/1 \
             >(grep --line-buffered -o "SIG.*auth-failure.*received" | \
-                while read ; do auth_failure ; done) ) \
+                while read ; do auth_failure ; done) \
+            >(grep --line-buffered -o "All connections have been.*exiting" | \
+                while read ; do connection_failure ; done) ) \
   "${@}"
