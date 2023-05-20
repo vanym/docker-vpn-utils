@@ -8,6 +8,7 @@ services:
       - "./resolv.conf:/etc/netns/route/resolv.conf"
       - "./vpn:/etc/openvpn:ro"
       - "./scripts:/opt/scripts:ro"
+      - "./rr:/var/rr:rw"
     pid: "service:route"
     cap_add:
       - SYS_ADMIN
