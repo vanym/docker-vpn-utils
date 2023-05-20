@@ -8,12 +8,12 @@ mkdir -p /var/run/netns
 ln -sf /proc/1/ns/net /var/run/netns/"$NETNS"
 
 source /opt/scripts/ovpn-run-rr.sh
-mkdir -p /opt/rr
-rr_rotate /opt/rr/always /etc/openvpn/rr/always.d/
-rr_init /opt/rr/auth-failure /etc/openvpn/rr/auth-failure.d/
+mkdir -p /var/rr
+rr_rotate /var/rr/always /etc/openvpn/rr/always.d/
+rr_init /var/rr/auth-failure /etc/openvpn/rr/auth-failure.d/
 
 auth_failure(){
-  rr_rotate /opt/rr/auth-failure /etc/openvpn/rr/auth-failure.d/
+  rr_rotate /var/rr/auth-failure /etc/openvpn/rr/auth-failure.d/
 }
 
 exec openvpn \
