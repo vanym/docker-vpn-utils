@@ -27,8 +27,8 @@ if mkdir "$CGROUP_ROOT"/"$CGROUP_NAME" 2> >(:); then
   iptables -t mangle -A OUTPUT -m cgroup --path "$CGROUP_NAME" -j MARK --set-mark "$DECID"
   iptables -t nat -A POSTROUTING -m mark --mark "$DECID" -j MASQUERADE
   ip route add default via "$CIP" table "$DECID"
-  ip rule add fwmark "$DECID" table "$DECID"
-  ip rule add fwmark "$DECID" suppress_prefixlength 0
+  ip rule add fwmark "$DECID" table "$DECID" priority 20101
+  ip rule add fwmark "$DECID" suppress_prefixlength 0 priority 20100
   systemd-run -q bash -c '
 #!/bin/bash
 
@@ -45,12 +45,12 @@ do true ; done
 iptables -t mangle -D OUTPUT -m cgroup --path "$CGROUP_NAME" -j MARK --set-mark "$DECID"
 iptables -t nat -D POSTROUTING -m mark --mark "$DECID" -j MASQUERADE
 ip route flush table "$DECID"
-ip rule del fwmark "$DECID" suppress_prefixlength 0
-ip rule del fwmark "$DECID" table "$DECID"
+ip rule del fwmark "$DECID" suppress_prefixlength 0 priority 20100
+ip rule del fwmark "$DECID" table "$DECID" priority 20101
 rmdir "$CGROUP_ROOT"/"$CGROUP_NAME"
 
 ' _ "$CGROUP_ROOT" "$CGROUP_NAME" "$DECID"
 fi
 
 echo $$ > "$CGROUP_ROOT"/"$CGROUP_NAME"/cgroup.procs
-exec unshare -m --propagation slave bash -c 'mount --make-private --bind "'"$DIRSH"/resolv.conf'" /etc/resolv.conf && exec unshare "${@}"' _ "${@}"
+exec unshare -m --propagation slave bash -c 'mount --make-private --bind -o ro "'"$DIRSH"/resolv.conf'" /etc/resolv.conf && exec unshare "${@}"' _ "${@}"
