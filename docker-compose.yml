@@ -32,14 +32,14 @@ services:
       - "net.ipv4.ip_forward=1"
     command: ["sh", "-c", "iptables -t nat -A POSTROUTING -j MASQUERADE &&
                            iptables -A FORWARD -j ACCEPT &&
-                           iptables -A OUTPUT -m owner --uid-owner 8000 -o eth0 -j REJECT &&
+                           iptables -A OUTPUT -m owner --uid-owner 17818 -o eth0 -j REJECT &&
                            iptables -t mangle -A FORWARD -j TTL --ttl-inc 1 &&
                            ip route delete default && exec tail -f /dev/null"]
   socks5:
     image: ghcr.io/wzshiming/socks5/socks5:v0.4.2@sha256:6917b1a5f5753072e0b964af0a9a3f74134ade88985f9db8f1b9a7f5161a51c5
     restart: unless-stopped
     network_mode: "service:route"
-    user: "8000"
+    user: "17818"
   socat2unix:
     image: alpine/socat:1.7.4.4@sha256:8c1b44c58dcc6a63aa231c14b4e7fc237eec6d3b93cc0c88538fa4edba3921f9
     restart: unless-stopped
