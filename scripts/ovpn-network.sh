@@ -70,7 +70,7 @@ case $script_type in
     unset i
     if [ -n "$route_vpn_gateway" ]; then
       ip netns exec "$NETNS" \
-        ip -4 route add default via "$route_vpn_gateway"
+        ip -4 route replace default via "$route_vpn_gateway"
     fi
     if [ -n "$IPV6" ]; then
       while
@@ -84,7 +84,7 @@ case $script_type in
       unset i
       if [ -n "$ifconfig_ipv6_remote" ]; then
         ip netns exec "$NETNS" \
-          ip -6 route add default via "$ifconfig_ipv6_remote" metric 200
+          ip -6 route replace default via "$ifconfig_ipv6_remote" metric 200
       fi
     fi
   ;;
