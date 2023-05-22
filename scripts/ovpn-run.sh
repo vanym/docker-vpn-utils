@@ -5,7 +5,8 @@ set -e
 NETNS="route"
 
 mkdir -p /var/run/netns
-ln -sf /proc/1/ns/net /var/run/netns/"$NETNS"
+[ -e /var/run/netns/"$NETNS" ] || \
+  ln -s /proc/1/ns/net /var/run/netns/"$NETNS"
 
 source /opt/scripts/ovpn-run-rr.sh
 mkdir -p /var/rr
