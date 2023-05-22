@@ -53,4 +53,4 @@ rmdir "$CGROUP_ROOT"/"$CGROUP_NAME"
 fi
 
 echo $$ > "$CGROUP_ROOT"/"$CGROUP_NAME"/cgroup.procs
-exec unshare -m --propagation slave bash -c 'mount --make-private --bind -o ro "'"$DIRSH"/resolv.conf'" /etc/resolv.conf && exec unshare "${@}"' _ "${@}"
+exec unshare -m --propagation slave bash -c 'mount --make-private --bind -o ro "'"$DIRSH"/resolv.conf'" /etc/resolv.conf && exec unshare -- "${@}"' _ "${@}"
