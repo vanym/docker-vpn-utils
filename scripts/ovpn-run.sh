@@ -22,6 +22,8 @@ connection_failure(){
   rr_rotate /var/rr/connection-failure /etc/openvpn/rr/connection-failure.d/
 }
 
+echo "Rotation state:" $(readlink /var/rr/always /var/rr/auth-failure /var/rr/connection-failure)
+
 exec openvpn \
   --ifconfig-noexec \
   --route-noexec \
