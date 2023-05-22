@@ -27,3 +27,23 @@ services:
     sysctls:
       - "net.ipv4.ping_group_range=0 2147483647"
     command: ["sleep", "inf"]
+  socks5:
+    image: ghcr.io/wzshiming/socks5/socks5:v0.4.2@sha256:6917b1a5f5753072e0b964af0a9a3f74134ade88985f9db8f1b9a7f5161a51c5
+    restart: unless-stopped
+    network_mode: "service:route"
+    user: "8000"
+  socat2unix:
+    image: alpine/socat:1.7.4.4@sha256:8c1b44c58dcc6a63aa231c14b4e7fc237eec6d3b93cc0c88538fa4edba3921f9
+    restart: unless-stopped
+    volumes:
+      - "./sock:/var/sock:rw"
+    network_mode: "service:route"
+    command: ["unix-listen:/var/sock/socks5,fork,unlink-early", "tcp-connect:127.0.0.1:1080"]
+  socat2port:
+    image: alpine/socat:1.7.4.4@sha256:8c1b44c58dcc6a63aa231c14b4e7fc237eec6d3b93cc0c88538fa4edba3921f9
+    restart: unless-stopped
+    volumes:
+      - "./sock:/var/sock:ro"
+    ports:
+      - "1080:1080"
+    command: ["tcp-listen:1080,fork", "unix-connect:/var/sock/socks5"]
