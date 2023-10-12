@@ -3,8 +3,8 @@
 
 set -e
 
-case $script_type in
-  up)
+case "${script_type}-${script_context}" in
+  up-init)
     ip link set dev "$dev" up netns "$NETNS" mtu "$tun_mtu"
     netmask4="${ifconfig_netmask:-30}"
     netbits6="${ifconfig_ipv6_netbits:-112}"
@@ -56,7 +56,7 @@ case $script_type in
       fi
     fi
   ;;
-  route-up)
+  route-up-init)
     while
       eval 'network="$route_network_'$((++i))\"
       eval 'netmask="$route_netmask_'$i\"
@@ -88,5 +88,5 @@ case $script_type in
       fi
     fi
   ;;
-  down) ;;
+  down-init) ;;
 esac
