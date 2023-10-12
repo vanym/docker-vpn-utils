@@ -4,6 +4,9 @@ set -e
 
 SCREEN_NAME="piaport-run"
 
+# bypass https://savannah.gnu.org/bugs/?55618
+[ $(ulimit -n) -le 1024 ] || ulimit -n 1024
+
 case $script_type in
   route-up)
     { read -r PIA_USER && read -r PIA_PASS ; } < login.conf
