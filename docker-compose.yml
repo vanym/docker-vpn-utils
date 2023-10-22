@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   openvpn:
-    build: build-openvpn
+    build: build/openvpn
     restart: unless-stopped
     volumes:
       - "./resolv.conf:/etc/netns/route/resolv.conf"
