@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  route:
+    image: busybox
+    restart: unless-stopped
+    init: true
+    stop_signal: SIGKILL
+    sysctls:
+      - "net.ipv4.ping_group_range=0 2147483647"
+    command: ["sleep", "inf"]
+  dnsmasq:
+    build: build/dnsmasq
+    restart: unless-stopped
+    stop_signal: SIGKILL
+    network_mode: "service:route"
+    command: --no-hosts --cache-size=0 --strict-order --clear-on-reload
