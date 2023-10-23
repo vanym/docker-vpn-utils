@@ -20,6 +20,10 @@ Directory `./vpn/rr` contains `always`, `auth-failure`, `connection-failure` sym
 
 In this branch *route* container has a network bridge to the host. It can be used for routing packets through *route* container, as well as for connecting from *route* network namespace to the host.
 
+## DNS
+
+This branch has *dnsmasq* container that runs DNS relay in *route* network.
+
 ## Socks5
 
 This branch has *socks5* container with socks5 server and two socat containers to pass connection from outside *route* network namespace using unix socket (`./sock/socks5`).

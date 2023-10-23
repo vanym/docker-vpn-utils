@@ -35,6 +35,12 @@ services:
                            iptables -A OUTPUT -m owner --uid-owner 17818 -o eth0 -j REJECT &&
                            iptables -t mangle -A FORWARD -j TTL --ttl-inc 1 &&
                            ip route delete default && exec tail -f /dev/null"]
+  dnsmasq:
+    build: build/dnsmasq
+    restart: unless-stopped
+    stop_signal: SIGKILL
+    network_mode: "service:route"
+    command: --no-hosts --cache-size=0 --strict-order --clear-on-reload
   socks5:
     image: ghcr.io/wzshiming/socks5/socks5:v0.4.2@sha256:6917b1a5f5753072e0b964af0a9a3f74134ade88985f9db8f1b9a7f5161a51c5
     restart: unless-stopped
