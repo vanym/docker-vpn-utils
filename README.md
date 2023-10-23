@@ -16,6 +16,17 @@ Directory `./vpn/rr` contains `always`, `auth-failure`, `connection-failure` sym
  - `auth-failure` — every auth failure
  - `connection-failure` — after exceed `connect-retry-max`
 
+## WireguardServer
+
+This branch has *wireguardserver* container that adds a wireguard interface to *route* configured to forward packets from the wireguard network to the route network.
+Peers of the wireguard network are isolated from each other.
+
+Use `wireguardserver/makekeys.sh`, `wireguardserver/addpeer.sh` scripts to initial configure of the wireguard network.
+
+## DNS
+
+This branch has *dnsmasq* container that runs DNS relay in *route* network.
+
 ## Scripts
 
 There is some scripts:
@@ -26,8 +37,10 @@ There is some scripts:
  - `userns.sh` — same as `enterns.sh` but with sudo wrapper
  - `addbypass.sh` — adds ip rule with 30000 priority to use main routing table for packets from *VPN* container
  - `delbypass.sh` — removes ip rule added by `addbypass.sh`
+ - `wireguardserver/makekeys.sh` — generate initial keys of the wireguard network
+ - `wireguardserver/addpeer.sh` — adds peer to the wireguard config and outputs config for that peer
 
-Scripts from `./scripts` directory used inside container
+Scripts from `./scripts`, `wireguardserver/scripts` directories used inside containers
 
 ## VPN Chain
 
