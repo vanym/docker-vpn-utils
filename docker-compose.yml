@@ -34,6 +34,12 @@ services:
                            iptables -A FORWARD -j ACCEPT &&
                            iptables -t mangle -A FORWARD -j TTL --ttl-inc 1 &&
                            ip route delete default && exec tail -f /dev/null"]
+  dnsmasq:
+    build: build/dnsmasq
+    restart: unless-stopped
+    stop_signal: SIGKILL
+    network_mode: "service:route"
+    command: --no-hosts --cache-size=0 --strict-order --clear-on-reload
 networks:
   bridge:
     internal: false
