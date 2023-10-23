@@ -24,6 +24,7 @@ cat <<-EOF
 [Interface]
 PrivateKey = $PRIVATEKEY
 Address = $PEERIP
+DNS = $HOSTIP
 
 [Peer]
 PublicKey = $HOSTPUBKEY

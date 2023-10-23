@@ -32,3 +32,9 @@ services:
     ports:
       - 51820:51820/udp
     command: ["/opt/scripts/wgserver-run.sh"]
+  dnsmasq:
+    build: build/dnsmasq
+    restart: unless-stopped
+    stop_signal: SIGKILL
+    network_mode: "service:route"
+    command: --no-hosts --cache-size=0 --strict-order --clear-on-reload

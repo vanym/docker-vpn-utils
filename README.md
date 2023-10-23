@@ -11,6 +11,10 @@ Peers of the wireguard network are isolated from each other.
 
 Use `wireguardserver/makekeys.sh`, `wireguardserver/addpeer.sh` scripts to initial configure of the wireguard network.
 
+## DNS
+
+This branch has *dnsmasq* container that runs DNS relay in *route* network.
+
 ## Scripts
 
 There is some scripts:
