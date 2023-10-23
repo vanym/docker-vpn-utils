@@ -31,6 +31,12 @@ Use `wireguardserver/makekeys.sh`, `wireguardserver/addpeer.sh` scripts to initi
 
 This branch has *dnsmasq* container that runs DNS relay in *route* network.
 
+## Socks5
+
+This branch has *socks5* container with socks5 server and two socat containers to pass connection from outside *route* network namespace using unix socket (`./sock/socks5`).
+[Used socks5 server](https://github.com/wzshiming/socks5/tree/v0.4.2) allows BIND and ASSOCIATE commands.
+Connections from socks5 server to bridge and the wireguard network will be rejected.
+
 ## Scripts
 
 There is some scripts:
