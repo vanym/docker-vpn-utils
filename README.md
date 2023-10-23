@@ -20,6 +20,13 @@ Directory `./vpn/rr` contains `always`, `auth-failure`, `connection-failure` sym
 
 In this branch *route* container has a network bridge to the host. It can be used for routing packets through *route* container, as well as for connecting from *route* network namespace to the host.
 
+## WireguardServer
+
+This branch has *wireguardserver* container that adds a wireguard interface to *route* configured to forward packets from the wireguard network to the route network.
+Peers of the wireguard network are isolated from each other.
+
+Use `wireguardserver/makekeys.sh`, `wireguardserver/addpeer.sh` scripts to initial configure of the wireguard network.
+
 ## DNS
 
 This branch has *dnsmasq* container that runs DNS relay in *route* network.
@@ -38,8 +45,10 @@ There is some scripts:
  - `delroute.sh` — removes ip rules added by `addroute.sh`
  - `enterroute.sh` — creates and enters cgroup with ip rules to use *route* container as default route.
  - `userroute.sh` — same as `enterroute.sh` but with sudo wrapper
+ - `wireguardserver/makekeys.sh` — generate initial keys of the wireguard network
+ - `wireguardserver/addpeer.sh` — adds peer to the wireguard config and outputs config for that peer
 
-Scripts from `./scripts` directory used inside container
+Scripts from `./scripts`, `wireguardserver/scripts` directories used inside containers
 
 ## VPN Chain
 

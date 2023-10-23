@@ -23,6 +23,7 @@ services:
     stop_signal: SIGKILL
     volumes:
       - "./resolv.conf:/etc/resolv.conf"
+      - "./wireguardserver/config:/etc/wireguard:ro"
     cap_add:
       - NET_ADMIN
     networks:
@@ -31,9 +32,26 @@ services:
       - "net.ipv4.ping_group_range=0 2147483647"
       - "net.ipv4.ip_forward=1"
     command: ["sh", "-c", "iptables -t nat -A POSTROUTING -j MASQUERADE &&
+                           iptables -A FORWARD -s $(cat /etc/wireguard/address) \
+                                               -d $(cat /etc/wireguard/address) -j REJECT &&
+                           iptables -A FORWARD -s $(cat /etc/wireguard/address) -o eth0 -j REJECT &&
+                           iptables -A FORWARD -i eth0 -d $(cat /etc/wireguard/address) -j REJECT &&
                            iptables -A FORWARD -j ACCEPT &&
                            iptables -t mangle -A FORWARD -j TTL --ttl-inc 1 &&
                            ip route delete default && exec tail -f /dev/null"]
+  wireguardserver:
+    build: build/wireguardserver
+    restart: unless-stopped
+    volumes:
+      - "./wireguardserver/config:/etc/wireguard:ro"
+      - "./wireguardserver/scripts:/opt/scripts:ro"
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+    pid: "service:route"
+    ports:
+      - 51820:51820/udp
+    command: ["/opt/scripts/wgserver-run.sh"]
   dnsmasq:
     build: build/dnsmasq
     restart: unless-stopped
