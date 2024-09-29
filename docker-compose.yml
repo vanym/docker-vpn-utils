@@ -29,8 +29,7 @@ services:
       - SYS_ADMIN
       - NET_ADMIN
     pid: "service:route"
-    ports:
-      - 51820:51820/udp
+    network_mode: host
     command: ["/opt/scripts/wgserver-run.sh"]
   dnsmasq:
     build: build/dnsmasq
