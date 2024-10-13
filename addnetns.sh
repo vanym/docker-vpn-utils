@@ -3,7 +3,7 @@
 set -e
 
 DIRSH=$(dirname "${BASH_SOURCE[0]}")
-CID=$(docker-compose -f "$DIRSH"/docker-compose.yml ps route -q)
+CID=$(docker-compose --log-level ERROR -f "$DIRSH"/docker-compose.yml ps route -q)
 NSPATH=$(docker inspect -f '{{ .NetworkSettings.SandboxKey }}' "$CID")
 NSNAME=${1:-$(docker inspect -f '{{ index .Config.Labels "com.docker.compose.project" }}' "$CID")}
 
