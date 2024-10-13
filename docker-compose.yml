@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   openvpn:
-    image: lawtancool/docker-openvpn-xor@sha256:5c64db86390e61f767dc24b648fd58ec8574d3d9f477b278d4dc8bb3fa6cf90e
+    image: lawtancool/docker-openvpn-xor@sha256:5c4169cb95e63b73c661c5e31dd7e85e55a7083f246953011864e817f3481846
     restart: unless-stopped
     volumes:
       - "./resolv.conf:/etc/netns/route/resolv.conf"
@@ -17,7 +17,7 @@ services:
       - "/dev/net/tun"
     command: ["/opt/scripts/ovpn-run.sh", "--up-restart"]
   route:
-    image: wpengine/iptables@sha256:83833e038941488b8e7b02d961d42966093f9de1c336d84e541c0fb6589eaf7c
+    build: build/iptables
     restart: unless-stopped
     init: true
     stop_signal: SIGKILL
@@ -48,8 +48,7 @@ services:
       - SYS_ADMIN
       - NET_ADMIN
     pid: "service:route"
-    ports:
-      - 51820:51820/udp
+    network_mode: host
     command: ["/opt/scripts/wgserver-run.sh"]
   dnsmasq:
     build: build/dnsmasq
@@ -58,19 +57,19 @@ services:
     network_mode: "service:route"
     command: --no-hosts --cache-size=0 --strict-order --clear-on-reload
   socks5:
-    image: ghcr.io/wzshiming/socks5/socks5:v0.4.2@sha256:6917b1a5f5753072e0b964af0a9a3f74134ade88985f9db8f1b9a7f5161a51c5
+    image: ghcr.io/wzshiming/socks5/socks5:v0.4.2@sha256:1aca1fa75fc2ebd0041ca6944627f48223541cf37e03722b2982e7f6c23af2c6
     restart: unless-stopped
     network_mode: "service:route"
     user: "17818"
   socat2unix:
-    image: alpine/socat:1.7.4.4@sha256:8c1b44c58dcc6a63aa231c14b4e7fc237eec6d3b93cc0c88538fa4edba3921f9
+    image: alpine/socat:1.7.4.4@sha256:93efcf633c5489b170404df25e289f811cabeea728a5367f0c9b1560982edf14
     restart: unless-stopped
     volumes:
       - "./sock:/var/sock:rw"
     network_mode: "service:route"
     command: ["unix-listen:/var/sock/socks5,fork,unlink-early", "tcp-connect:127.0.0.1:1080"]
   socat2port:
-    image: alpine/socat:1.7.4.4@sha256:8c1b44c58dcc6a63aa231c14b4e7fc237eec6d3b93cc0c88538fa4edba3921f9
+    image: alpine/socat:1.7.4.4@sha256:93efcf633c5489b170404df25e289f811cabeea728a5367f0c9b1560982edf14
     restart: unless-stopped
     volumes:
       - "./sock:/var/sock:ro"
