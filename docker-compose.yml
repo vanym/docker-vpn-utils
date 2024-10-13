@@ -28,7 +28,7 @@ services:
       - "net.ipv4.ping_group_range=0 2147483647"
     command: ["sleep", "inf"]
   socks5:
-    image: ghcr.io/wzshiming/socks5/socks5:v0.4.2@sha256:1aca1fa75fc2ebd0041ca6944627f48223541cf37e03722b2982e7f6c23af2c6
+    image: ghcr.io/wzshiming/socks5/socks5:v0.4.3@sha256:4e0522e32c7d20cc4e498ff2e5d9f43ed4bb5fe1de287e7122a1feafbcdec1f7
     restart: unless-stopped
     network_mode: "service:route"
     user: "17818"
