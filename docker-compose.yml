@@ -17,7 +17,7 @@ services:
       - "/dev/net/tun"
     command: ["/opt/scripts/ovpn-run.sh", "--up-restart"]
   route:
-    image: wpengine/iptables@sha256:83833e038941488b8e7b02d961d42966093f9de1c336d84e541c0fb6589eaf7c
+    build: build/iptables
     restart: unless-stopped
     init: true
     stop_signal: SIGKILL
