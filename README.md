@@ -4,17 +4,9 @@ This repository contains a docker compose template and utils scripts to run a VP
 The VPN connection happens in *VPN* container, but network interface attaches to another individual *route* container.
 **Check other branches for more features!**
 
-## OpenVPN
+## Wireguard
 
-To configure OpenVPN place the ovpn.conf file in the `./vpn` directory, you can also specify additional command line arguments in the `docker-compose.yml` file. Your [scripting integrations](https://openvpn.net/community-resources/reference-manual-for-openvpn-2-5/#scripting-integration) can be placed in `./scripts/up-init`, `./scripts/down-init`, etcetera.
-
-### Round robin
-
-Directory `./vpn/rr` contains `always`, `auth-failure`, `connection-failure` symlinks that points to `always.d/00`, `auth-failure.d/00`, `connection-failure.d/00` respectively and change to next number named directory, after the event corresponding link name hapends.
-
- - `always` — every container restart
- - `auth-failure` — every auth failure
- - `connection-failure` — after exceed `connect-retry-max`
+To configure Wireguard place the `*.conf` files in the `./wireguard` directory, they will loaded using `wg-quick up`.
 
 ## Scripts
 

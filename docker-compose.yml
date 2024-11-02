@@ -1,21 +1,18 @@
 version: '3.7'
 
 services:
-  openvpn:
-    image: lawtancool/docker-openvpn-xor@sha256:5c4169cb95e63b73c661c5e31dd7e85e55a7083f246953011864e817f3481846
+  wireguard:
+    build: build/wireguard
     restart: unless-stopped
     volumes:
       - "./resolv.conf:/etc/netns/route/resolv.conf"
-      - "./vpn:/etc/openvpn:ro"
+      - "./wireguard:/etc/wireguard:ro"
       - "./scripts:/opt/scripts:ro"
-      - "./rr:/var/rr:rw"
     pid: "service:route"
     cap_add:
       - SYS_ADMIN
       - NET_ADMIN
-    devices:
-      - "/dev/net/tun"
-    command: ["/opt/scripts/ovpn-run.sh", "--up-restart"]
+    command: ["/opt/scripts/wg-run.sh"]
   route:
     image: busybox
     restart: unless-stopped
