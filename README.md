@@ -8,6 +8,14 @@ The VPN connection happens in *VPN* container, but network interface attaches to
 
 To configure Wireguard place the `*.conf` files in the `./wireguard` directory, they will loaded using `wg-quick up`.
 
+## Bridge
+
+In this branch *route* container has a network bridge to the host. It can be used for routing packets through *route* container, as well as for connecting from *route* network namespace to the host.
+
+## DNS
+
+This branch has *dnsmasq* container that runs DNS relay in *route* network.
+
 ## Scripts
 
 There is some scripts:
@@ -18,6 +26,10 @@ There is some scripts:
  - `userns.sh` — same as `enterns.sh` but with sudo wrapper
  - `addbypass.sh` — adds ip rule with 30000 priority to use main routing table for packets from *VPN* container
  - `delbypass.sh` — removes ip rule added by `addbypass.sh`
+ - `addroute.sh` — adds ip rules with 30100 priority to use *route* container as default route for host. Use `addbypass.sh` to bypass these rules.
+ - `delroute.sh` — removes ip rules added by `addroute.sh`
+ - `enterroute.sh` — creates and enters cgroup with ip rules to use *route* container as default route.
+ - `userroute.sh` — same as `enterroute.sh` but with sudo wrapper
 
 Scripts from `./scripts` directory used inside container
 

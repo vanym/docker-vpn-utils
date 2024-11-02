@@ -14,13 +14,31 @@ services:
       - NET_ADMIN
     command: ["/opt/scripts/wg-run.sh"]
   route:
-    image: busybox
+    build: build/iptables
     restart: unless-stopped
     init: true
     stop_signal: SIGKILL
     volumes:
       - "./resolv.conf:/etc/resolv.conf"
-    network_mode: none
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - bridge
     sysctls:
       - "net.ipv4.ping_group_range=0 2147483647"
-    command: ["sleep", "inf"]
+      - "net.ipv4.ip_forward=1"
+    command: ["sh", "-c", "iptables -t nat -A POSTROUTING -j MASQUERADE &&
+                           iptables -A FORWARD -j ACCEPT &&
+                           iptables -t mangle -A FORWARD -j TTL --ttl-inc 1 &&
+                           ip route delete default && exec tail -f /dev/null"]
+  dnsmasq:
+    build: build/dnsmasq
+    restart: unless-stopped
+    stop_signal: SIGKILL
+    network_mode: "service:route"
+    command: --no-hosts --cache-size=0 --strict-order --clear-on-reload
+networks:
+  bridge:
+    internal: false
+    driver_opts:
+      com.docker.network.bridge.enable_ip_masquerade: "false"
