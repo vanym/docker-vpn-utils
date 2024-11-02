@@ -8,6 +8,11 @@ The VPN connection happens in *VPN* container, but network interface attaches to
 
 To configure Wireguard place the `*.conf` files in the `./wireguard` directory, they will loaded using `wg-quick up`.
 
+## Socks5
+
+This branch has *socks5* container with socks5 server and two socat containers to pass connection from outside *route* network namespace using unix socket (`./sock/socks5`).
+[Used socks5 server](https://github.com/wzshiming/socks5/tree/v0.4.2) allows BIND and ASSOCIATE commands.
+
 ## Scripts
 
 There is some scripts:
