@@ -30,6 +30,8 @@ services:
     command: ["sh", "-c", "iptables -t nat -A POSTROUTING -j MASQUERADE &&
                            iptables -A FORWARD -s $(cat /etc/wireguard/address) \
                                                -d $(cat /etc/wireguard/address) -j REJECT &&
+                           iptables -A OUTPUT -m owner --uid-owner 17818 \
+                                               -d $(cat /etc/wireguard/address) -j REJECT &&
                            iptables -A FORWARD -j ACCEPT &&
                            iptables -t mangle -A FORWARD -j TTL --ttl-inc 1 &&
                            exec tail -f /dev/null"]
@@ -51,3 +53,23 @@ services:
     stop_signal: SIGKILL
     network_mode: "service:route"
     command: --no-hosts --cache-size=0 --strict-order --clear-on-reload
+  socks5:
+    image: ghcr.io/wzshiming/socks5/socks5:v0.4.3@sha256:4e0522e32c7d20cc4e498ff2e5d9f43ed4bb5fe1de287e7122a1feafbcdec1f7
+    restart: unless-stopped
+    network_mode: "service:route"
+    user: "17818"
+  socat2unix:
+    image: alpine/socat:1.7.4.4@sha256:93efcf633c5489b170404df25e289f811cabeea728a5367f0c9b1560982edf14
+    restart: unless-stopped
+    volumes:
+      - "./sock:/var/sock:rw"
+    network_mode: "service:route"
+    command: ["unix-listen:/var/sock/socks5,fork,unlink-early", "tcp-connect:127.0.0.1:1080"]
+  socat2port:
+    image: alpine/socat:1.7.4.4@sha256:93efcf633c5489b170404df25e289f811cabeea728a5367f0c9b1560982edf14
+    restart: unless-stopped
+    volumes:
+      - "./sock:/var/sock:ro"
+    ports:
+      - "1080:1080"
+    command: ["tcp-listen:1080,fork", "unix-connect:/var/sock/socks5"]
