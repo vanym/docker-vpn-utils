@@ -22,7 +22,15 @@ connection_failure(){
   rr_rotate /var/rr/connection-failure /etc/openvpn/rr/connection-failure.d/
 }
 
-echo "Rotation state:" $(readlink /var/rr/always /var/rr/auth-failure /var/rr/connection-failure)
+rr_print(){
+  echo "Rotation state:" $(readlink /var/rr/always /var/rr/auth-failure /var/rr/connection-failure)
+}
+
+[ ! -d /opt/scripts/ovpn-run.d ] || for SH in $(ls -1p /opt/scripts/ovpn-run.d | grep '\.sh$'); do
+  source /opt/scripts/ovpn-run.d/"$SH"
+done
+
+rr_print
 
 exec openvpn \
   --ifconfig-noexec \
