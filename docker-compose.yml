@@ -16,6 +16,15 @@ services:
     devices:
       - "/dev/net/tun"
     command: ["/opt/scripts/ovpn-run.sh", "--up-restart"]
+  zapret:
+    build: build/zapret
+    restart: unless-stopped
+    init: true
+    volumes:
+      - "./zapret:/opt/zapret/etc:ro"
+    cap_add:
+      - NET_ADMIN
+    network_mode: "service:openvpn"
   route:
     image: busybox
     restart: unless-stopped

@@ -16,6 +16,10 @@ Directory `./vpn/rr` contains `always`, `auth-failure`, `connection-failure` sym
  - `auth-failure` — every auth failure
  - `connection-failure` — after exceed `connect-retry-max`
 
+## Zapret
+
+This branch has *zapret* container with runs [zapret](https://github.com/bol-van/zapret) anti-dpi tool. *VPN* container traffic is passed through it.
+
 ## Scripts
 
 There is some scripts:
